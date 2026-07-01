@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Native Messaging Sample",
+  "version": "1.0",
+  "description": "Minimal sample that talks to a native host.",
+  "permissions": [
+    "nativeMessaging"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
