@@ -97,6 +97,10 @@ extension/           # 動作確認用の最小拡張サンプル
 `extension_key.pem` は**紛失すると ID が変わる**ため保管し、公開リポジトリにコミットしない
 （`.gitignore` 済み。鍵を共有するとなりすましが可能になる）。
 
+Claude Code から実行する場合、毎回の確認プロンプトが煩わしければ `.claude/settings.local.json`
+の `permissions.allow` に `"Bash(node scripts/gen_extension_key.js)"` を追加しておくと以後は
+自動実行される（このファイルは個人環境のローカル設定なので配布・共有はしない）。
+
 **手動方式（鍵を使わない場合）**
 
 `chrome://extensions` でデベロッパーモードを有効にし、拡張フォルダを読み込んで表示される
