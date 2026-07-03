@@ -6,6 +6,12 @@
 "use strict";
 
 let buffer = Buffer.alloc(0);
+// Tracks the message currently being handled, so that if the browser side
+// disconnects mid-processing (see stdin "end" below) we know exactly which
+// request was in flight. This is the main payoff of connectNative over
+// sendNativeMessage: with connectNative + one-message-at-a-time from the
+// extension side, at most one message is ever in flight here.
+let inFlight = null;
 
 // Write a single message back to the browser.
 function sendMessage(message) {
@@ -39,11 +45,14 @@ async function drain() {
       continue;
     }
 
+    inFlight = message;
     try {
       const response = await handleMessage(message);
       if (response !== undefined) sendMessage(response);
     } catch (e) {
       sendMessage({ ok: false, error: String(e && e.message ? e.message : e) });
+    } finally {
+      inFlight = null;
     }
   }
 }
@@ -53,5 +62,15 @@ process.stdin.on("data", (chunk) => {
   drain();
 });
 
-// Chrome closes stdin when the port disconnects; exit cleanly.
-process.stdin.on("end", () => process.exit(0));
+// Chrome reliably closes stdin the moment the extension side disconnects
+// (normal shutdown or a crash) -- this is what makes connectNative useful
+// for detecting abnormal termination. If a message was still being handled,
+// log it before exiting (stderr here; swap for a log file in a real host).
+process.stdin.on("end", () => {
+  if (inFlight) {
+    process.stderr.write(
+      "disconnected while processing: " + JSON.stringify(inFlight) + "\n"
+    );
+  }
+  process.exit(0);
+});
