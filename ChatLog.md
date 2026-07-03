@@ -1622,10 +1622,201 @@ File created successfully at: e:\Project\Line-up\Native-Messaging-Skill\.gitigno
 
 ご指示通り`ChatLog.html`/`ChatLog.md`は対象外にしています。`native-messaging/assets/.gitignore`（Skillテンプレート内、生成物である鍵ファイル等を除外するためのもの）とは役割が異なるため、そのまま維持しています。
 
+### 👤 ユーザー · 2026-07-01 21:56:59
+
+.claude/settings.local.jsonが省かれていますが、この内容は利用側のプロジェクトで参考にしたりすることはありませんか？
+
+### 🤖 Claude · 2026-07-01 21:57:09
+
+<details><summary>🔧 Read</summary>
+
+```json
+{
+  "file_path": "e:\\Project\\Line-up\\Native-Messaging-Skill\\.claude\\settings.local.json"
+}
+```
+
+</details>
+
+### 👤 ユーザー · 2026-07-01 21:57:09
+
+<details><summary>📄 結果</summary>
+
+```
+1	{
+2	  "permissions": {
+3	    "allow": [
+4	      "Bash(node -e ' *)",
+5	      "Bash(node scripts/gen_extension_key.js)",
+6	      "Bash(node -e \"console.log\\(JSON.parse\\(require\\('fs'\\).readFileSync\\('extension/manifest.json','utf8'\\)\\).key.slice\\(0,40\\)\\)\")"
+7	    ]
+8	  }
+9	}
+10	
+```
+
+</details>
+
+### 🤖 Claude · 2026-07-01 21:57:53
+
+中身を確認しました。`node -e`のワンライナー実行許可、`gen_extension_key.js`の実行許可、manifest.jsonの`key`確認コマンドの許可――これは開発中に私が実行を求めるたびに承認いただいた**個人環境のBash許可リスト**で、Skillの実装やアーキテクチャの情報は含んでいません。
+
+ただしご指摘の通り、間接的な参考価値はあります。特に`node scripts/gen_extension_key.js`は`SKILL.md`の手順4で案内しているコマンドそのものなので、「このSkillを使うと何を承認することになるか」の実例にはなっています。
+
+一方で、`settings.local.json`自体を配布用テンプレートに含めるのは適切ではありません。
+
+- ファイル名の通り「ローカル」設定であり、承認するかどうかは各利用者・各環境の判断に委ねるべきもの
+- 2行目の`node -e ' *)`のような広いワイルドカード許可は、他人の環境にそのままコピーすると意図しないコマンドまで自動承認してしまうリスクがある
+
+参考情報として活かすなら、中身をコピーするのではなく「SKILL.mdの該当手順に、よく使う許可コマンドの一言案内を添える」形が安全です。追記しますか？
+
+### 🤖 Claude · 2026-07-01 21:58:02
+
+<details><summary>🔧 AskUserQuestion</summary>
+
+```json
+{
+  "questions": [
+    {
+      "question": "SKILL.mdの手順４（ID確定）に、gen_extension_key.js実行時の推奨許可コマンドを一言案内として追記しますか？",
+      "header": "SKILL.md追記",
+      "multiSelect": false,
+      "options": [
+        {
+          "label": "追記する（推奨）",
+          "description": "「node scripts/gen_extension_key.js の実行を許可するとスムーズ」という要旨の一文を手順４に追加する。settings.local.json自体は配布しない"
+        },
+        {
+          "label": "追記しない",
+          "description": ".gitignoreの判断はこのままでよい。SKILL.mdは現状維持"
+        }
+      ]
+    }
+  ]
+}
+```
+
+</details>
+
+### 👤 ユーザー · 2026-07-01 21:58:36
+
+<details><summary>📄 結果</summary>
+
+```
+Your questions have been answered: "SKILL.mdの手順４（ID確定）に、gen_extension_key.js実行時の推奨許可コマンドを一言案内として追記しますか？"="追記する（推奨）". You can now continue with these answers in mind.
+```
+
+</details>
+
+### 🤖 Claude · 2026-07-01 21:58:57
+
+SKILL.mdの手順4（プロジェクト内のソース、およびユーザースコープにデプロイ済みのコピー両方）に追記します。
+
+### 🤖 Claude · 2026-07-01 21:59:00
+
+<details><summary>🔧 Edit</summary>
+
+```json
+{
+  "replace_all": false,
+  "file_path": "e:\\Project\\Line-up\\Native-Messaging-Skill\\native-messaging\\SKILL.md",
+  "old_string": "利点は、Chrome へロードする前に ID が確定し、手動でコピペする必要がないこと。注意点として\n`extension_key.pem` は**紛失すると ID が変わる**ため保管し、公開リポジトリにコミットしない\n（`.gitignore` 済み。鍵を共有するとなりすましが可能になる）。",
+  "new_string": "利点は、Chrome へロードする前に ID が確定し、手動でコピペする必要がないこと。注意点として\n`extension_key.pem` は**紛失すると ID が変わる**ため保管し、公開リポジトリにコミットしない\n（`.gitignore` 済み。鍵を共有するとなりすましが可能になる）。\n\nClaude Code から実行する場合、毎回の確認プロンプトが煩わしければ `.claude/settings.local.json`\nの `permissions.allow` に `\"Bash(node scripts/gen_extension_key.js)\"` を追加しておくと以後は\n自動実行される（このファイルは個人環境のローカル設定なので配布・共有はしない）。"
+}
+```
+
+</details>
+
+### 👤 ユーザー · 2026-07-01 21:59:02
+
+<details><summary>📄 結果</summary>
+
+```
+The file e:\Project\Line-up\Native-Messaging-Skill\native-messaging\SKILL.md has been updated successfully. (file state is current in your context — no need to Read it back)
+```
+
+</details>
+
+### 🤖 Claude · 2026-07-01 21:59:06
+
+<details><summary>🔧 Read</summary>
+
+```json
+{
+  "file_path": "C:\\Users\\sadak\\.claude\\skills\\native-messaging\\SKILL.md",
+  "offset": 85,
+  "limit": 15
+}
+```
+
+</details>
+
+### 👤 ユーザー · 2026-07-01 21:59:06
+
+<details><summary>📄 結果</summary>
+
+```
+85	### 4. 拡張機能 ID を確定する
+86	
+87	拡張 ID は 2 通りで確定できる。**鍵方式（推奨）**を既定とし、不要なら従来の手動取得でもよい。
+88	
+89	**鍵方式（推奨・ID を事前固定）**
+90	
+91	`node scripts/gen_extension_key.js` を実行する。これは次を行う:
+92	- RSA 鍵ペアを生成し秘密鍵を `scripts/extension_key.pem` に保存
+93	- `extension/manifest.json` に公開鍵 `key` を埋め込み、ID を**リロードや将来のストア公開でも不変**に固定
+94	- 算出した ID を `host/extension_id.txt` に書き出す（次の手順で `install_host.bat` が自動利用）
+95	
+96	利点は、Chrome へロードする前に ID が確定し、手動でコピペする必要がないこと。注意点として
+97	`extension_key.pem` は**紛失すると ID が変わる**ため保管し、公開リポジトリにコミットしない
+98	（`.gitignore` 済み。鍵を共有するとなりすましが可能になる）。
+99	
+```
+
+</details>
+
+### 🤖 Claude · 2026-07-01 21:59:09
+
+ユーザースコープのコピーが未更新（デプロイ前の内容）であることを確認しました。同じ変更を反映します。
+
+### 🤖 Claude · 2026-07-01 21:59:12
+
+<details><summary>🔧 Edit</summary>
+
+```json
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\sadak\\.claude\\skills\\native-messaging\\SKILL.md",
+  "old_string": "利点は、Chrome へロードする前に ID が確定し、手動でコピペする必要がないこと。注意点として\n`extension_key.pem` は**紛失すると ID が変わる**ため保管し、公開リポジトリにコミットしない\n（`.gitignore` 済み。鍵を共有するとなりすましが可能になる）。",
+  "new_string": "利点は、Chrome へロードする前に ID が確定し、手動でコピペする必要がないこと。注意点として\n`extension_key.pem` は**紛失すると ID が変わる**ため保管し、公開リポジトリにコミットしない\n（`.gitignore` 済み。鍵を共有するとなりすましが可能になる）。\n\nClaude Code から実行する場合、毎回の確認プロンプトが煩わしければ `.claude/settings.local.json`\nの `permissions.allow` に `\"Bash(node scripts/gen_extension_key.js)\"` を追加しておくと以後は\n自動実行される（このファイルは個人環境のローカル設定なので配布・共有はしない）。"
+}
+```
+
+</details>
+
+### 👤 ユーザー · 2026-07-01 21:59:21
+
+<details><summary>📄 結果</summary>
+
+```
+The file C:\Users\sadak\.claude\skills\native-messaging\SKILL.md has been updated successfully. (file state is current in your context — no need to Read it back)
+```
+
+</details>
+
+### 🤖 Claude · 2026-07-01 21:59:27
+
+プロジェクト内のソースとユーザースコープのデプロイ済みコピー、両方の`SKILL.md`手順4に追記しました。
+
+- `settings.local.json`は個人環境依存のため.gitignore対象のままで問題ない、という判断は維持
+- 中身をコピー配布する代わりに、「よく使うので許可しておくと便利」という運用ヒントだけをSKILL.mdに残す形にしました
+
+これで今後このSkillを別プロジェクトで使う際も、鍵生成コマンドの確認プロンプトを都度出すか自動許可するかを利用者自身が判断できます。
+
 <!-- CCLOGVIEW:BODY_END -->
 
 ---
 
-*生成: 2026-07-01 21:35:50 ／ 最終ログ: 2026-07-01 21:35:49*
+*生成: 2026-07-01 21:59:28 ／ 最終ログ: 2026-07-01 21:59:27*
 
-<!-- CCLOGVIEW:LAST_TS=2026-07-01T12:35:49.359Z -->
+<!-- CCLOGVIEW:LAST_TS=2026-07-01T12:59:27.268Z -->
